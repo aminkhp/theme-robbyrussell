@@ -16,6 +16,7 @@ function _is_git_dirty
   echo (command git status -s --ignore-submodules=dirty $untracked 2> /dev/null)
 end
 
+set fish_prompt_pwd_dir_length 0
 function fish_prompt
   set -l last_status $status
   set -l cyan (set_color -o cyan)
@@ -30,7 +31,8 @@ function fish_prompt
   else
       set arrow "$red➜ "
   end
-  set -l cwd $cyan(basename (prompt_pwd))
+  set -l cwd $cyan(prompt_pwd)
+  set -l host (hostname)
 
   if [ (_git_branch_name) ]
     set -l git_branch $red(_git_branch_name)
@@ -42,6 +44,7 @@ function fish_prompt
     end
   end
 
-  echo -n -s $arrow ' ' $cwd $git_info $normal ' '
+  echo -n -s -e $yellow "[$USER@$host] " $cwd $git_info $normal '\n'
+  echo -n -s $arrow ' ' 
 end
 
